@@ -1,0 +1,38 @@
+{
+  "network": "studionet",
+  "chain_id": 61999,
+  "source_sha256": "fc4a601d75e0c4bc5abb2094787a1d1f78134fe5d4c4b8b0d086957ea0037fdf",
+  "fixture_revision": "f4fbd7eb8bb76aa779bc07b00feff305c93c2a2a",
+  "policy_url": "https://raw.githubusercontent.com/mohammadisina1988-jpg/share-fuse/f4fbd7eb8bb76aa779bc07b00feff305c93c2a2a/policies/publication.json",
+  "policy_sha256": "208be1f4ddc46e4470da688a9d1e0c0756c9d41ae84c99fbf082d92ec516e17d",
+  "policy": {
+    "id": "SYNTHETIC-PUBLICATION-1",
+    "paragraphs": [
+      "This normative policy governs cumulative publication of four fictional fields: codename, contact, location and shift. Combine all past and proposed publications for this one dataset, regardless of audience or publisher address.",
+      "Each field may be published alone. Any combination of these four fields is also permitted, subject to the two overriding combination restrictions below. These are the only restrictions. Permission for individual fields never overrides a combination restriction.",
+      "Publication of codename together with contact is expressly prohibited. Any bundle containing both is prohibited, including bundles containing other fields. This prohibition prevails over all other permissions and uncertainties.",
+      "Permission for the combination of location together with shift is expressly unresolved. A bundle containing both has unknown permission unless it is already expressly prohibited by the codename-and-contact rule. Permission for location alone or shift alone does not resolve their combination."
+    ]
+  },
+  "fields": [
+    {
+      "id": "codename",
+      "meaning": "The fictional participant's assigned codename."
+    },
+    {
+      "id": "contact",
+      "meaning": "The fictional participant's contact routing tag."
+    },
+    {
+      "id": "location",
+      "meaning": "The fictional participant's worksite label."
+    },
+    {
+      "id": "shift",
+      "meaning": "The fictional participant's shift schedule label."
+    }
+  ],
+  "contract": "0x3E7114876Efb196ABAb49a1d36814F88d28F3384",
+  "transaction": "0x9e41e275406b60305f0ddb82e561f72950ff8c636474c53e33e759e525085e2a",
+  "exact_source_match": true
+}

@@ -1,0 +1,7 @@
+{
+  "source_sha256": "fc4a601d75e0c4bc5abb2094787a1d1f78134fe5d4c4b8b0d086957ea0037fdf",
+  "hashes": {
+    "deployment": "0x9e41e275406b60305f0ddb82e561f72950ff8c636474c53e33e759e525085e2a",
+    "activate": "0x73e5886e9cfdce11e9f4d1bb855f7901c2c01ed6c17d1bf113012599652ef313"
+  }
+}

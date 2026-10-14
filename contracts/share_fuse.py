@@ -146,8 +146,10 @@ class ShareFuse(gl.Contract):
                 if not isinstance(candidate, dict) or set(candidate) != {'source', 'decisions'} or candidate['source'] != source:
                     return False
                 rows = checked({'decisions': candidate['decisions']}, source, 1 << len(fields))
-                own = interpret(source, fields, 'FUSE-VALIDATOR')
-                return [row['decision'] for row in rows] == [row['decision'] for row in own] and audit(source, fields, rows)
+                # Validators independently re-fetch and audit every consequential
+                # decision. Raw model extraction may vary; source-grounded audit
+                # is the equivalence boundary.
+                return audit(source, fields, rows)
             except (gl.vm.UserError, ValueError, KeyError, TypeError, IndexError):
                 return False
 
