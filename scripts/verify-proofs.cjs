@@ -4,6 +4,11 @@ const {checkState,checkQuote}=require('./proof-checks.cjs');
 const load=name=>JSON.parse(fs.readFileSync(path.join(root,'proofs',name+'.json')));
 async function main(){
   const offline=process.argv.includes('--offline'),d=load('deployment'),cases=load('cases'),code=fs.readFileSync(path.join(root,'contracts/share_fuse.py'));
+  const expectedCases=[['activate',true,0,0],['first-reservation',true,1,1],['stale-preview',false,1,1],['forbidden-composition',false,1,1],['safe-extension',true,5,2],['unknown-composition',false,5,2],['no-new-fields',false,5,2],['immutable-policy',false,5,2]];
+  assert(equal(cases.map(c=>[c.name,c.success,c.mask,c.history]),expectedCases),'Missing or substituted proof cases');
+  assert(equal(d.fields,JSON.parse(fs.readFileSync(path.join(root,'config/fields.json')))),'Field definitions differ from source configuration');
+  const revision=fs.readFileSync(path.join(root,'config/fixture-revision.txt'),'utf8').trim();
+  assert(d.fixture_revision===revision&&d.policy_url==='https://raw.githubusercontent.com/mohammadisina1988-jpg/share-fuse/'+revision+'/policies/publication.json','Policy URL is not the pinned fixture');
   assert(digest(code)===d.source_sha256&&d.exact_source_match,'Code binding');
   const bytes=fs.readFileSync(path.join(root,'policies/publication.json'));
   assert(digest(bytes)===d.policy_sha256&&equal(JSON.parse(bytes),d.policy),'Policy binding');
@@ -12,6 +17,7 @@ async function main(){
   async function verifyReceipt(name,hash,success){
     const saved=load(name+'-receipt'),r=offline?saved:await rpc('eth_getTransactionByHash',[hash]),s=receiptSummary(r);
     assert(s.hash===hash&&s.status==='FINALIZED'&&(r.to_address||r.recipient).toLowerCase()===d.contract.toLowerCase(),'Receipt binding');
+    assert(r.from_address.toLowerCase()===load('initial-state').controller.toLowerCase(),'Write signer differs from fixed controller');
     assert(equal(r.consensus_data.votes,saved.consensus_data.votes),'Votes changed');
     assert(s.result==='MAJORITY_AGREE'&&s.agree>(s.agree+s.disagree+s.idle)/2,'Consensus');
     assert(success?['SUCCESS','FINISHED_WITH_RETURN'].includes(s.execution):s.execution==='ERROR','Execution');return s;
@@ -26,6 +32,9 @@ async function main(){
     summary.cases.push({name:item.name,success:item.success,released_mask:item.mask,...receipt});previous=proof.state;
   }
   const quotes=load('quotes');assert(quotes.length===45,'Missing quote proofs');
+  const unique=new Set(quotes.map(q=>q.stage+':'+q.result.requested_mask));
+  assert(unique.size===45,'Duplicated quote proofs');
+  for(const [stage,current] of [['activate',0],['first-reservation',1],['safe-extension',5]])assert(quotes.filter(q=>q.stage===stage&&q.current===current).length===15,'Missing quote stage');
   for(const q of quotes){const requested=q.requested.reduce((m,id)=>m|(1<<d.fields.findIndex(f=>f.id===id)),0);checkQuote(q.result,q.current,requested);}
   if(!offline){
     assert(await rpc('eth_chainId',[])==='0xf22f','Wrong chain');

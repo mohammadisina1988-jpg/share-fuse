@@ -1,0 +1,27 @@
+{
+  "compiled": null,
+  "controller": "0x7D02b6EA71085b3DD636c83B7b7cb9cAF289DAA4",
+  "fields": [
+    {
+      "id": "codename",
+      "meaning": "The fictional participant's assigned codename."
+    },
+    {
+      "id": "contact",
+      "meaning": "The fictional participant's contact routing tag."
+    },
+    {
+      "id": "location",
+      "meaning": "The fictional participant's worksite label."
+    },
+    {
+      "id": "shift",
+      "meaning": "The fictional participant's shift schedule label."
+    }
+  ],
+  "history": [],
+  "policy_sha256": "208be1f4ddc46e4470da688a9d1e0c0756c9d41ae84c99fbf082d92ec516e17d",
+  "policy_url": "https://raw.githubusercontent.com/mohammadisina1988-jpg/share-fuse/f4fbd7eb8bb76aa779bc07b00feff305c93c2a2a/policies/publication.json",
+  "released_mask": 0,
+  "safe_frontier": []
+}

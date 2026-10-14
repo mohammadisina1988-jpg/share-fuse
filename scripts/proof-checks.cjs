@@ -11,7 +11,7 @@ function checkState(state,metadata,current,historyLength,active=true){
   for(let i=0;i<15;i++){
     const row=c.decisions[i],mask=i+1,label=expectedDecision(mask);
     assert(row.mask===mask&&row.decision===label,'Unexpected semantic policy decision');
-    assert(Number.isInteger(row.paragraph)&&(label==='UNKNOWN'?row.paragraph===-1:row.paragraph>=0&&row.paragraph<c.source.paragraphs.length),'Anchor shape');
+    assert(Number.isInteger(row.paragraph)&&row.paragraph>=(label==='UNKNOWN'?-1:0)&&row.paragraph<c.source.paragraphs.length,'Anchor shape');
   }
   const labels=Array.from({length:16},(_,i)=>expectedDecision(i));
   assert(equal(c.lattice.effective,labels)&&equal(c.lattice.blockers,[3,12]),'Conservative lattice mismatch');

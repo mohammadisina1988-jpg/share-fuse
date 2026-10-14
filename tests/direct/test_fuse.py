@@ -15,7 +15,7 @@ HASH = hashlib.sha256(BODY).hexdigest()
 URL = 'https://raw.githubusercontent.com/mohammadisina1988-jpg/share-fuse/'+'a'*40+'/policies/publication.json'
 
 def decisions():
-    return [{'mask':m,'decision':'DENY' if m & 3 == 3 else 'UNKNOWN' if m & 12 == 12 else 'ALLOW','paragraph':2 if m & 3 == 3 else -1 if m & 12 == 12 else 1} for m in range(1,16)]
+    return [{'mask':m,'decision':'DENY' if m & 3 == 3 else 'UNKNOWN' if m & 12 == 12 else 'ALLOW','paragraph':2 if m & 3 == 3 else 3 if m & 12 == 12 else 1} for m in range(1,16)]
 
 @pytest.fixture
 def gate(direct_deploy):
@@ -129,7 +129,7 @@ def test_malformed_model_output_cannot_activate(gate,direct_vm,mutation):
     if mutation=='bool-mask':rows[0]['mask']=True
     if mutation=='bool-anchor':rows[0]['paragraph']=True
     if mutation=='irrelevant-index':rows[0]['paragraph']=99
-    if mutation=='unknown-anchor':rows[11]['paragraph']=1
+    if mutation=='unknown-anchor':rows[11]['paragraph']=99
     if mutation=='bad-enum':rows[0]['decision']='SAFE'
     if mutation=='extra-key':rows[0]['confidence']=100
     mock(direct_vm,leader=rows)
@@ -147,6 +147,16 @@ def test_commitment_mismatch_does_not_activate(gate,direct_vm):
     mock(direct_vm,body=BODY+b' ')
     with direct_vm.expect_revert('commitment mismatch'):gate.activate()
     assert gate.get_state()['compiled'] is None
+
+def test_explicit_uncertainty_anchor_survives_independent_replay(gate,direct_vm):
+    activate(gate,direct_vm)
+    assert gate.get_state()['compiled']['decisions'][11]=={'mask':12,'decision':'UNKNOWN','paragraph':3}
+    assert direct_vm.run_validator() is True
+
+def test_existing_but_irrelevant_uncertainty_anchor_fails_audit(gate,direct_vm):
+    rows=decisions();rows[11]['paragraph']=1
+    mock(direct_vm,leader=rows,audit=False);gate.activate()
+    assert direct_vm.run_validator() is False
 
 @pytest.mark.parametrize('kind',['mutable-url','bad-hash','empty','oversize','duplicate','bad-meaning','double-json'])
 def test_configuration_validation(direct_deploy,kind):
