@@ -1,0 +1,6 @@
+[
+  {"id":"codename","meaning":"The fictional participant's assigned codename."},
+  {"id":"contact","meaning":"The fictional participant's contact routing tag."},
+  {"id":"location","meaning":"The fictional participant's worksite label."},
+  {"id":"shift","meaning":"The fictional participant's shift schedule label."}
+]
