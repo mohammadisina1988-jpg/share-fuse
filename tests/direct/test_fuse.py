@@ -24,9 +24,9 @@ def gate(direct_deploy):
 def mock(vm, leader=None, own=None, audit=True, body=BODY):
     vm.clear_mocks()
     vm.mock_web(re.escape(URL),{'status':200,'body':body})
+    answer = own if own is not None else leader if leader is not None else decisions()
     for start in range(0,15,5):
-        vm.mock_llm(r'.*FUSE-LEADER BATCH-'+str(start+1)+r'\n.*',json.dumps({'decisions':(decisions() if leader is None else leader)[start:start+5]}))
-        vm.mock_llm(r'.*FUSE-VALIDATOR BATCH-'+str(start+1)+r'\n.*',json.dumps({'decisions':(decisions() if own is None else own)[start:start+5]}))
+        vm.mock_llm(r'.*FUSE-CLASSIFY BATCH-'+str(start+1)+r'\n.*',json.dumps({'decisions':answer[start:start+5]}))
     vm.mock_llm(r'.*FUSE-AUDIT.*',json.dumps({'valid':audit}))
 
 def activate(gate,vm):
@@ -118,6 +118,30 @@ def test_equivalent_decisions_allow_different_material_anchors(gate,direct_vm):
     own=decisions();own[0]['paragraph']=0
     mock(direct_vm,own=own)
     assert direct_vm.run_validator() is True
+
+
+def test_independent_classification_uses_identical_prompts_and_exhaustive_ids():
+    from types import SimpleNamespace
+    prompts = []
+    def model(prompt, response_format):
+        if prompt.startswith('FUSE-AUDIT'):
+            prompts.append(prompt)
+            return {'valid': True}
+        start = (len(prompts) % 3) * 5
+        prompts.append(prompt)
+        return {'decisions': decisions()[start:start + 5]}
+    tree = ast.parse((ROOT/'contracts/share_fuse.py').read_text())
+    names = {'catalogue', 'interpret', 'checked', 'parse', 'unique_keys', 'audit'}
+    nodes = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in names]
+    scope = {'json': json, 'gl': SimpleNamespace(nondet=SimpleNamespace(exec_prompt=model))}
+    exec(compile(ast.Module(body=nodes, type_ignores=[]), '<classifier>', 'exec'), scope)
+    for _ in range(2):
+        assert scope['interpret'](json.loads(BODY), FIELDS) == decisions()
+    assert prompts[:3] == prompts[3:]
+    assert scope['catalogue'](FIELDS)[8] == {'mask': 9, 'published_field_ids': ['codename', 'shift']}
+    assert scope['audit'](json.loads(BODY), FIELDS, decisions()) is True
+    assert json.dumps(FIELDS, sort_keys=True) in prompts[-1]
+    assert json.dumps(json.loads(BODY), sort_keys=True) in prompts[-1]
 
 def test_validator_refetches_policy(gate,direct_vm):
     activate(gate,direct_vm);mock(direct_vm,body=BODY+b' ')

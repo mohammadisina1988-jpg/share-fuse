@@ -1,0 +1,89 @@
+[
+  {
+    "name": "activate",
+    "method": "activate",
+    "args": [],
+    "success": true,
+    "mask": 0,
+    "history": 0
+  },
+  {
+    "name": "first-reservation",
+    "method": "reserve",
+    "args": [
+      "0",
+      "[\"codename\"]"
+    ],
+    "success": true,
+    "mask": 1,
+    "history": 1
+  },
+  {
+    "name": "stale-preview",
+    "method": "reserve",
+    "args": [
+      "0",
+      "[\"location\"]"
+    ],
+    "success": false,
+    "mask": 1,
+    "history": 1,
+    "reason": "Stale publication state"
+  },
+  {
+    "name": "forbidden-composition",
+    "method": "reserve",
+    "args": [
+      "1",
+      "[\"contact\"]"
+    ],
+    "success": false,
+    "mask": 1,
+    "history": 1,
+    "reason": "Cumulative publication DENY"
+  },
+  {
+    "name": "safe-extension",
+    "method": "reserve",
+    "args": [
+      "1",
+      "[\"location\"]"
+    ],
+    "success": true,
+    "mask": 5,
+    "history": 2
+  },
+  {
+    "name": "unknown-composition",
+    "method": "reserve",
+    "args": [
+      "5",
+      "[\"shift\"]"
+    ],
+    "success": false,
+    "mask": 5,
+    "history": 2,
+    "reason": "Cumulative publication UNKNOWN"
+  },
+  {
+    "name": "no-new-fields",
+    "method": "reserve",
+    "args": [
+      "5",
+      "[\"codename\"]"
+    ],
+    "success": false,
+    "mask": 5,
+    "history": 2,
+    "reason": "No new fields"
+  },
+  {
+    "name": "immutable-policy",
+    "method": "activate",
+    "args": [],
+    "success": false,
+    "mask": 5,
+    "history": 2,
+    "reason": "Policy already immutable and active"
+  }
+]

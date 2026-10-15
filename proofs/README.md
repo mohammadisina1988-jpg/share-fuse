@@ -1,6 +1,15 @@
 # Proof status
 
-Live deployment and receipt links will be added after successful execution, finality and source/state verification. No distributed-consensus outcome is claimed by this initial source publication.
+Prior deployments succeeded, but all retained activation attempts below were rejected. The latest source has 51 direct tests and awaits accepted activation and reservation proofs. A finalized deployment alone does not establish a usable active policy.
+
+## Retained batched-version attempts
+
+Source commit `c23faae11ce6a354fbd174ab8dac7769175dfefa` deployed successfully through both CLI paths:
+
+- Local contract `0x73D5a6B7312cAf0Cdb65eE209432aA226e3ca818`: [deployment](https://explorer-studio.genlayer.com/tx/0x77d486c4e440d4fe6676aee980e63ff1809225df168b8aebe1bd7f60dbf1f2a6), [rejected activation](https://explorer-studio.genlayer.com/tx/0x3bbb9533a190a1e93265d1ca813a80dcf023f4016786c02ed8496d17df4b8281), [full receipt](rejected-local-77d486c4/activate-receipt.json).
+- [Workflow 38782865870](https://github.com/mohammadisina1988-jpg/share-fuse/actions/runs/38782865870), contract `0xB673eEb63E32F50Bbd4F49B1A497812e182bE218`: [deployment](https://explorer-studio.genlayer.com/tx/0x220ceaebd564dd2c79365b6e13f414140cc994cf79ae43f16a845f0f38260573), [rejected activation](https://explorer-studio.genlayer.com/tx/0xb197b7082d90bf661ee132cc55a0ef67533a084cc5a7ee6256ce205edc992a7b), [full receipt](rejected-38782865870/activate-receipt.json).
+
+Both activations finalized with MAJORITY_DISAGREE (0 agree, 3 disagree, 2 idle). Diagnostics show independent misclassification of field combinations 9, 10, 13 and 14; one cloud validator also rejected the material-anchor audit. The next source supplies identical classification prompts to both phases and exhaustive field-ID lists, with definitions separately available to classification and audit. Exact agreement and substantive audit remain required. These records are diagnostic failures, not successful activation proofs.
 
 ## Retained initial attempt
 
