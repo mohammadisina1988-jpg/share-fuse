@@ -24,8 +24,9 @@ def gate(direct_deploy):
 def mock(vm, leader=None, own=None, audit=True, body=BODY):
     vm.clear_mocks()
     vm.mock_web(re.escape(URL),{'status':200,'body':body})
-    vm.mock_llm(r'.*FUSE-LEADER.*',json.dumps({'decisions':decisions() if leader is None else leader}))
-    vm.mock_llm(r'.*FUSE-VALIDATOR.*',json.dumps({'decisions':decisions() if own is None else own}))
+    for start in range(0,15,5):
+        vm.mock_llm(r'.*FUSE-LEADER BATCH-'+str(start+1)+r'\n.*',json.dumps({'decisions':(decisions() if leader is None else leader)[start:start+5]}))
+        vm.mock_llm(r'.*FUSE-VALIDATOR BATCH-'+str(start+1)+r'\n.*',json.dumps({'decisions':(decisions() if own is None else own)[start:start+5]}))
     vm.mock_llm(r'.*FUSE-AUDIT.*',json.dumps({'valid':audit}))
 
 def activate(gate,vm):
@@ -105,7 +106,7 @@ def test_unactivated_gate_fails_closed(gate,direct_vm,method):
         if method=='quote':gate.quote(['codename'])
         else:gate.reserve(0,['codename'])
 
-@pytest.mark.parametrize('mask,new',[(1,'DENY'),(3,'ALLOW'),(12,'ALLOW'),(15,'UNKNOWN')])
+@pytest.mark.parametrize('mask,new',[(1,'DENY'),(3,'ALLOW'),(6,'UNKNOWN'),(10,'DENY'),(12,'ALLOW'),(15,'UNKNOWN')])
 def test_every_decision_requires_exact_independent_agreement(gate,direct_vm,mask,new):
     activate(gate,direct_vm)
     own=decisions();own[mask-1]={'mask':mask,'decision':new,'paragraph':-1 if new=='UNKNOWN' else 1}

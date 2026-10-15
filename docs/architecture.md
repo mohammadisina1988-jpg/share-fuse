@@ -8,6 +8,8 @@ Activation fetches the complete UTF-8 JSON document from a full commit-pinned ra
 
 Storage is read into plain memory before nondeterminism. All state writes occur after the accepted result returns. The contract follows GenLayer's [nondeterministic execution boundary](https://docs.genlayer.com/developers/intelligent-contracts/features/non-determinism).
 
+Classification uses batches of at most five bundles with the complete policy repeated in each prompt. Masks are row identifiers; explicit field membership determines which restrictions apply. General permission remains applicable when no overriding combination restriction matches. Batching reduces simultaneous classification load without relaxing exact validator agreement. The final table still requires every mask in order, and the separate full-source audit still checks the entire candidate table together.
+
 ## Composition algebra
 
 The contract supports monotone risk policies. Every DENY decision blocks all supersets. Every UNKNOWN blocks all supersets unless a definite DENY applies. No extra disclosure can repair an earlier violation. The effective table is a conservative upward closure; a minimal blocker antichain and maximal safe frontier expose the composition boundary. If an UNKNOWN minimal blocker contains a larger definite prohibition, quotes retain an additional DENY witness. Exceptions that require publishing an extra field to make a forbidden subset safe are outside this monotone model.
