@@ -28,7 +28,7 @@ python -m pytest tests/direct -q
 node scripts/check-proof-checker.cjs
 ```
 
-47 direct tests pass, including explicit validator callback replay and source-anchored uncertainty. A separate set-containment oracle checks closure, minimal blockers and every current-state frontier over all 2,187 three-field ternary tables plus 128 four-field samples. Offline verifier tests reject six forged states/quotes. Direct tests use mocked web/LLM operations; distributed consensus requires the live workflow.
+48 direct tests pass, including explicit validator callback replay, independent decision disagreement and source-anchored uncertainty. A separate set-containment oracle checks closure, minimal blockers and every current-state frontier over all 2,187 three-field ternary tables plus 128 four-field samples. Offline verifier tests reject six forged states/quotes. Direct tests use mocked web/LLM operations; distributed consensus requires the live workflow.
 
 ## Live reproduction
 

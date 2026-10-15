@@ -109,8 +109,14 @@ def test_unactivated_gate_fails_closed(gate,direct_vm,method):
 def test_every_decision_requires_exact_independent_agreement(gate,direct_vm,mask,new):
     activate(gate,direct_vm)
     own=decisions();own[mask-1]={'mask':mask,'decision':new,'paragraph':-1 if new=='UNKNOWN' else 1}
-    mock(direct_vm,own=own,audit=False)
+    mock(direct_vm,own=own,audit=True)
     assert direct_vm.run_validator() is False
+
+def test_equivalent_decisions_allow_different_material_anchors(gate,direct_vm):
+    activate(gate,direct_vm)
+    own=decisions();own[0]['paragraph']=0
+    mock(direct_vm,own=own)
+    assert direct_vm.run_validator() is True
 
 def test_validator_refetches_policy(gate,direct_vm):
     activate(gate,direct_vm);mock(direct_vm,body=BODY+b' ')

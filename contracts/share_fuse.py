@@ -144,13 +144,19 @@ class ShareFuse(gl.Contract):
                     return failure_agrees(result, leader)
                 source, candidate = acquire(url, digest), result.calldata
                 if not isinstance(candidate, dict) or set(candidate) != {'source', 'decisions'} or candidate['source'] != source:
+                    print('FUSE-REJECT source or result shape')
                     return False
                 rows = checked({'decisions': candidate['decisions']}, source, 1 << len(fields))
-                # Validators independently re-fetch and audit every consequential
-                # decision. Raw model extraction may vary; source-grounded audit
-                # is the equivalence boundary.
-                return audit(source, fields, rows)
-            except (gl.vm.UserError, ValueError, KeyError, TypeError, IndexError):
+                own = interpret(source, fields, 'FUSE-VALIDATOR')
+                disagreements = [row['mask'] for row, other in zip(rows, own) if row['decision'] != other['decision']]
+                if disagreements:
+                    print('FUSE-REJECT independent decisions', disagreements)
+                    return False
+                valid = audit(source, fields, rows)
+                print('FUSE-AUDIT-RESULT', valid)
+                return valid
+            except (gl.vm.UserError, ValueError, KeyError, TypeError, IndexError) as error:
+                print('FUSE-REJECT validation error', str(error))
                 return False
 
         result = gl.vm.run_nondet_unsafe(leader, validator)
