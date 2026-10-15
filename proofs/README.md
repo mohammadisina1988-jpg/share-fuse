@@ -2,6 +2,14 @@
 
 Prior deployments succeeded, but all retained activation attempts below were rejected. The latest source has 51 direct tests and awaits accepted activation and reservation proofs. A finalized deployment alone does not establish a usable active policy.
 
+## Current deployment: activation pending
+
+The corrected source at commit `978b0c6d548d810831cf6c554e834f5aaa2add7b` deployed to **`0x865378335f88bbe0FaF97f7825be72DDaa0eef75`** on gasless StudioNet (chain 61999). [Deployment transaction](https://explorer-studio.genlayer.com/tx/0xb787b80e35f24a5c14cf93a2879487933b915059d434cc5dbd45c252bf427bd5) finalized with SUCCESS / MAJORITY_AGREE, 5 agree and no dissent or idle votes. The downloaded contract bytes exactly match local source SHA-256 `d7cd606ce81bd7815c4f4654cdbb719d26c7eff1d832ed3a92299e6ec866882b`.
+
+[Deployment metadata](deployment.json) · [Full receipt](deployment-receipt.json) · [Initial onchain state](initial-state.json).
+
+Activation transaction `0x7a32131f317ccadd3e6cedd44624fd79ccf04bc35e09436fc30f66cb12ef5862` is pending. Successful activation and reservation proofs are not yet claimed.
+
 ## Retained batched-version attempts
 
 Source commit `c23faae11ce6a354fbd174ab8dac7769175dfefa` deployed successfully through both CLI paths:
